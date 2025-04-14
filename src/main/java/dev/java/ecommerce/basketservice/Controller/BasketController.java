@@ -1,7 +1,6 @@
 package dev.java.ecommerce.basketservice.Controller;
 
 import dev.java.ecommerce.basketservice.Entity.Basket;
-import dev.java.ecommerce.basketservice.Enums.PaymentMethod;
 import dev.java.ecommerce.basketservice.Request.BasketRequest;
 import dev.java.ecommerce.basketservice.Request.PaymentRequest;
 import dev.java.ecommerce.basketservice.Service.BasketService;
@@ -24,7 +23,7 @@ public class BasketController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Basket> findBasket(@PathVariable String id) {
-        return ResponseEntity.ok(basketService.findBasketById(id));
+        return ResponseEntity.ok(basketService.getBasketById(id));
     }
 
     @PutMapping("/{id}")
@@ -35,6 +34,12 @@ public class BasketController {
     @PutMapping("/{id}/payment")
     public ResponseEntity<Basket> payBasket(@PathVariable String id, @RequestBody PaymentRequest paymentRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(basketService.payBasket(id, paymentRequest));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteBasket(@PathVariable String id) {
+        basketService.deleteBasket(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
