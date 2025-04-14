@@ -6,11 +6,13 @@ import dev.java.ecommerce.basketservice.Enums.Status;
 import dev.java.ecommerce.basketservice.Repository.BasketRepository;
 import dev.java.ecommerce.basketservice.Request.BasketRequest;
 import dev.java.ecommerce.basketservice.Response.PlatziProductResponse;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -22,6 +24,11 @@ public class BasketService {
     public BasketService(BasketRepository basketRepository, ProductService productService) {
         this.basketRepository = basketRepository;
         this.productService = productService;
+    }
+
+    public Basket findBasketById(String id) {
+        return basketRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Basket not found"));
     }
 
     public Basket createBasket(BasketRequest basketRequest){
@@ -51,6 +58,24 @@ public class BasketService {
         basket.calculateTotalPrice();
 
        return basketRepository.save(basket);
+    }
+
+    public Basket updateBasket(String id, BasketRequest basketRequest) {
+        Basket basket = findBasketById(id);
+        List<Product> products = new ArrayList<>();
+        basketRequest.products().forEach(productRequest -> {
+            PlatziProductResponse platziProductResponse = productService.productById(productRequest.id());
+            products.add(Product.builder()
+                    .id(platziProductResponse.id())
+                    .title(platziProductResponse.title())
+                    .price(platziProductResponse.price())
+                    .quantity(productRequest.quantity())
+                    .build());
+        });
+
+        basket.setProducts(products);
+        basket.calculateTotalPrice();
+        return basketRepository.save(basket);
     }
 
 }

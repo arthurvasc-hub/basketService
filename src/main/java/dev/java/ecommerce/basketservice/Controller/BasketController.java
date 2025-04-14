@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/basket")
@@ -23,4 +20,16 @@ public class BasketController {
     public ResponseEntity<Basket> createBasket(@RequestBody BasketRequest basketRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(basketService.createBasket(basketRequest));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Basket> findBasket(@PathVariable String id) {
+        return ResponseEntity.ok(basketService.findBasketById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Basket> updateBasket(@PathVariable String id, @RequestBody BasketRequest basketRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(basketService.updateBasket(id, basketRequest));
+    }
+
+
 }
