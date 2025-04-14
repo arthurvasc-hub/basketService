@@ -5,6 +5,7 @@ import dev.java.ecommerce.basketservice.Entity.Product;
 import dev.java.ecommerce.basketservice.Enums.Status;
 import dev.java.ecommerce.basketservice.Repository.BasketRepository;
 import dev.java.ecommerce.basketservice.Request.BasketRequest;
+import dev.java.ecommerce.basketservice.Request.PaymentRequest;
 import dev.java.ecommerce.basketservice.Response.PlatziProductResponse;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,15 @@ public class BasketService {
         basket.setProducts(products);
         basket.calculateTotalPrice();
         return basketRepository.save(basket);
+    }
+
+    public Basket payBasket(String id, PaymentRequest paymentRequest){
+        Basket basket = findBasketById(id);
+        basket.setPaymentMethod(paymentRequest.paymentMethod());
+        basket.setStatus(Status.SOLD);
+        return basketRepository.save(basket);
+
+
     }
 
 }
