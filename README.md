@@ -33,7 +33,7 @@ Este serviço permite criar, visualizar, atualizar e finalizar (pagar) cestas de
 
 1.  **Clone o repositório:**
     ```bash
-    git clone <url-do-seu-repositorio>
+    git clone https://github.com/arthurvasc-hub/basketService
     cd basketservice
     ```
 
